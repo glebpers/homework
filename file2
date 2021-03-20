@@ -1,0 +1,81 @@
+#1
+1.nano new_file Создать файл с любым текстовым наполнением
+ctrl+o сохранить файл
+ctrl+x выйти
+2.echo "everyday" > new_file_2.txt
+cat new_file_2.txt
+nano new_file_2.txt
+
+#2
+cat /etc/* Вывести с помощью cat содержимое всех файлов в директории /etc (cat /etc/)
+cat /etc/* 2> /home/gleb/errors.log Направить ошибки в отдельный файл errors.log в вашей домашней директории
+wc errors.log Сколько объектов не удалось прочесть? (ответ: 97)
+
+#3
+ll /home/gleb | cut -d' ' -f 1 Использовать команду cut на вывод длинного списка каталога, чтобы отобразить только права доступа к файлам
+ll /home/gleb | cut -d' ' -f 1 | grep "^-" чтобы отобразить только права доступа к ФАЙЛАМ (све кроме дирикторий)
+ll /home/gleb | cut -d' ' -f 1 | sort
+ll /home/gleb | cut -d' ' -f 1 | sort | uniq отправить в конвейере этот вывод на sort и uniq, чтобы отфильтровать все повторяющиеся строки
+ll /home/gleb | cut -d' ' -f 1 | sort | uniq | wc  Потом с помощью wc подсчитать различные типы разрешений в этом каталоге (отображает количество: строк, слов, символов) ( -l выводит только строки)
+ll /home/gleb | cut -d' ' -f 1 | sort | uniq | grep "^[^t]" | wc -l  убрать из подсчета строку total
+
+#4
+ls -ld .?* | grep "^[^d]" или
+find . -maxdepth 1 -type f -name ".*" | wc -l  Сколько скрытых файлов в вашем домашнем каталоге?
+
+#5
+C:\Users\mandarin>ssh-keygen -o
+Generating public/private rsa key pair.
+Enter file in which to save the key (C:\Users\mandarin/.ssh/id_rsa): C:\Users\mandarin/.ssh/gleb_id_rsa
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in C:\Users\mandarin/.ssh/gleb_id_rsa.
+Your public key has been saved in C:\Users\mandarin/.ssh/gleb_id_rsa.pub.
+The key fingerprint is:
+SHA256:PGh749O9SLc0Sw0LsftHXb+Z3W6+phDdt5wQmYa12os mandarin@MANDARIN
+The key's randomart image is:
++---[RSA 2048]----+
+|             .   |
+|            o +  |
+|          .. *   |
+|       o   o= o .|
+|      o S oo.+ o+|
+|     . . . oo+= *|
+|      . o.oE*o.+*|
+|       o.o.*o+.=+|
+|        ... =+o=+|
++----[SHA256]-----+
+
+C:\Users\mandarin>ssh gleb@192.168.1.4
+The authenticity of host '192.168.1.4 (192.168.1.4)' can't be established.
+ECDSA key fingerprint is SHA256:pcOn0cKkhSKY/XorMumnLTiTRD/PTeg2wB0Gy/MPvwI.
+Are you sure you want to continue connecting (yes/no)? y
+Please type 'yes' or 'no': yes
+Warning: Permanently added '192.168.1.4' (ECDSA) to the list of known hosts.
+gleb@192.168.1.4's password:
+Welcome to Ubuntu 20.04.2 LTS (GNU/Linux 5.4.0-66-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Sat 20 Mar 2021 03:29:23 PM UTC
+
+  System load:  0.01               Processes:              207
+  Usage of /:   42.7% of 10.76GB   Users logged in:        1
+  Memory usage: 38%                IPv4 address for ens33: 192.168.1.4
+  Swap usage:   0%
+
+ * Introducing self-healing high availability clusters in MicroK8s.
+   Simple, hardened, Kubernetes for production, from RaspberryPi to DC.
+
+     https://microk8s.io/high-availability
+
+1 update can be installed immediately.
+0 of these updates are security updates.
+To see these additional updates run: apt list --upgradable
+
+
+*** System restart required ***
+Last login: Sat Mar 20 09:13:45 2021 from 192.168.1.6
+gleb@gleb:~$
