@@ -1,0 +1,30 @@
+#1
+sudo useradd user1  Создать пользователя
+sudo userdel user1 удалить пользователя
+
+#2
+sudo groupadd group1 Создать группу
+sudo usermod -aG group1 user1 добавить пользователя в группу
+sudo gpasswd -d user1 group1 удалить пользователя из группы
+sudo usermod -G group2 user1 попрактиковаться в смене групп у пользователей
+
+#3
+usermod -aG sudo user2 Добавить пользователя, имеющего право выполнять команды/действия от имени суперпользователя.
+sudo visudo
+user2 ALL=(ALL:ALL) ALL Сделать так, чтобы sudo не требовал пароль для выполнения команд.
+
+#4
+touch file1 и
+touch file2 Создать два произвольных файла
+chmod ug+rw file1 (chmod 664 file1) Первому присвоить права на чтение и запись для владельца и группы
+chmod o+r file1 (chmod 664 file1) только на чтение — для всех.
+chmod u+rw file2 (chmod 600 file2)
+chmod go-rw file2 Второму присвоить права на чтение и запись только для владельца.
+
+#5
+sudo addgroup developer Создать группу developer
+sudo adduser user1 и sudo adduser user2 
+sudo usermod -aG developer user1 и sudo usermod -aG developer user2  нескольких пользователей, входящих в неё.
+sudo su - user1
+mkdir dir_common общая директория
+chmod 770 dir_common/  Сделать так, чтобы созданные одними пользователями файлы могли изменять другие пользователи этой группы.
