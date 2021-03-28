@@ -1,0 +1,61 @@
+#1
+Диск создал не 300МВ, а 400 МВ.
+sudo parted /dev/sdb
+mklabel
+mkpart
+db
+ext4
+0
+200MB
+I
+print
+quit (первый раздел)
+  
+sudo fdisk /dev/sdb (второй раздел)
+
+(результат)
+/dev/sdb1      34 390625  390592 190.7M Linux filesystem 
+/dev/sdb2  390626 837598  446973 218.3M Linux filesystem 
+
+(результат)
+sdb                         8:16   0   409M  0 disk
+sdb1                      8:17   0 190.7M  0 part
+sdb2                      8:18   0 218.3M  0 part  (Разбить диск на 2 раздела по 150 Мб.)
+
+sudo mkdir /mnt/ext4/ (создал папку для монтирования)
+sudo mount /dev/sdb1 /mnt/ext4 (примонтировать к папке /mnt/ext4)
+sudo nano /etc/fstab
+/dev/sdb1 /mnt/ext4 ext4 defaults 0 0 Добавить точку монтирования /mnt/ext4 в /etc/fstab.
+#2
+sudo pvcreate /dev/sdb2 Физический том coздан
+sudo vgcreate volume2 /dev/sdb2 Группа томов
+sudo lvcreate -n vl2 -L 100M volume2 логический том "vl1"
+sudo mkfs.xfs /dev/volume2/vl2 Создать файловую систему XFS
+sudo mount /dev/volume2/vl2 /mnt/xfs/ примонтировать к папке /mnt/xfs/
+
+
+(результат)
+/dev/sdb1                          169M  216K  156M   1% /mnt/ext4
+/dev/sdb2                          213M   13M  201M   6% /mnt/xfs
+
+#3
+sudo touch /mnt/ext4/file1 Создать файл
+nano /mnt/ext4/file1 наполнить его произвольным содержимым
+sudo cp /mnt/ext4/file1 /mnt/ext4/file2 Скопировать его в file2
+sudo ln /mnt/ext4/file1 /mnt/ext4/file4 Создать жёсткую ссылку file4 на file1
+ls -li Посмотреть, какие inode у файлов.
+(результат)
+ 2 drwxr-xr-x 5 root root  4096 Mar 28 10:13 ext4
+ 13 -rw-r--r-- 2 root root    16 Mar 27 13:07 file1
+ 14 -rw-r--r-- 1 root root    16 Mar 28 09:52 file2
+ 15 lrwxrwxrwx 1 root root    15 Mar 28 09:57 file3 -> /mnt/ext4/file1
+ 13 -rw-r--r-- 2 root root    16 Mar 27 13:07 file4
+sudo rm /mnt/ext4/file1 Удалить file1
+(результат после удаления file1)
+ 14 -rw-r--r-- 1 root root    16 Mar 28 09:52 file2 (файл работает)
+ 15 lrwxrwxrwx 1 root root    15 Mar 28 09:57 file3 -> /mnt/ext4/file1 (символическая ссылка не активна)
+ 13 -rw-r--r-- 1 root root    16 Mar 27 13:07 file4 (жесткая ссылка осталась, через нее можно посмотреть содержимое удаленного файла)
+
+#4
+sudo ln -s /mnt/ext4/file4 /mnt/xfs/link Создать ссылку вида /mnt/xfs/link , по которой будет доступен /mnt/ext4/file4. Жесткую 
+ссылку создать, в данном случаи не возможно (разные файловые системы).
