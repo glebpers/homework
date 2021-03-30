@@ -1,0 +1,54 @@
+#1
+sudo vim /etc/ssh/sshd_config Изменить конфигурационный файл
+PasswordAuthentication no отключив аутентификацию по паролю
+sudo systemctl restart sshd Выполните рестарт службы
+sudo vim /etc/ssh/sshd_config Изменить конфигурационный файл
+PasswordAuthentication yes верните аутентификацию по паролюsudo 
+systemctl reload sshd выполните reload службы
+restart останавливает службу и снова запускает
+reload продолжает работу и перечитывает файлы конфигурации
+
+#2
+sudo apt-get install -y mc Установить программу mc.
+mc Запустите mc.
+sudo ps uax | grep mc Используя ps, найдите PID процесса
+gleb       11964  0.0  0.8  17804  8420 pts/0    S+   16:56   0:00 mc
+gleb       12190  0.0  0.0   6300   736 pts/2    S+   16:58   0:00 grep --color=auto mc
+sudo kill -9 11964 завершить процесс
+sudo ps uax | grep mc
+gleb       12314  0.0  0.0   6300   736 pts/2    S+   17:00   0:00 grep --color=auto mc
+
+#3
+vim geekbrains.sh
+chmod 775 geekbrains.sh
+./geekbrains.sh
+PING 127.0.0.1 (127.0.0.1) 56(84) bytes of data.
+64 bytes from 127.0.0.1: icmp_seq=1 ttl=64 time=0.373 ms
+64 bytes from 127.0.0.1: icmp_seq=2 ttl=64 time=0.064 ms  ping адреса 127.0.0.1.(скрипт)
+
+sudo mv geekbrains.sh  /usr/local/bin/ переносим скрипт
+sudo vim /etc/systemd/system/geekbrains.service конфигурационный файл
+
+sudo systemctl enable /etc/systemd/system/geekbrains.service создание symlink
+[unit]
+Description=Test programm
+After=multi-user.target
+
+[Service]
+ExecStart=/usr/local/bin/geekbrains.sh
+Type=simple
+
+[Install]
+WantedBy=multi-user.target (чтобы команда запускалась сразу при старте операционной системы)
+
+sudo systemctl start geekbrains.service запуск 
+sudo systemctl status geekbrains.service статус
+
+sudo ps uax | grep geekbrains
+root       17547  0.0  0.3   6972  3396 ?        Ss   18:42   0:00 /bin/bash /usr/local/bin/geekbrains.sh
+gleb       17743  0.0  0.0   6432   740 pts/0    S+   18:45   0:00 grep --color=auto geekbrains
+
+sudo top
+k (после открытия окна,нажимаем клавишу k)
+вводим pid нужного процесса+enter
+процесс остановлен.
