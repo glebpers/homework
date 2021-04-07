@@ -1,0 +1,62 @@
+#1
+sudo apt install tftpd-hpa
+sudo systemctl status tftpd-hpa.service
+sudo vim /etc/default/tftpd-hpa
+sudo systemctl restart tftpd-hpa.service
+sudo systemctl status tftpd-hpa.service
+sudo chown tftp.tftp /srv/tftp/
+tftp -i 192.168.1.6 PUT C:\Users\mandarin\dir10\test10.txt (закачать файл на сервер)
+
+(результат)
+gleb@gleb:~$ ls /srv/tftp/
+test10.txt
+
+tftp -i 192.168.1.6 get test1000.txt (пердача файла)
+
+(результат)
+Успешная передача: 18 байт за 1 сек., 18 байт/с
+-ar---        06.04.2021     22:25             18 test1000.txt
+
+#2
+sudo apt update
+sudo apt install nginx (устанавливаем)
+sudo systemctl start nginx (запкскаем)
+systemctl status nginx (смотрим состояние)
+sudo mkdir -p /srv/www/ (создаем папки)
+sudo touch main (создаем файл)
+sudo chown -R $USER:$USER /srv/www (настроим права доступа)
+sudo mkdir conf (создаем папку)
+sudo touch main.cfg (создаем файл)
+sudo chown -R $USER:$USER /srv/www/conf (настроим права доступа)
+sudo chmod -R 755 /srv/www (права для корневой директории) 
+
+sudo vim /etc/nginx/sites-available/my1.conf (создаем конф. файл)
+
+server {
+    listen 80;
+    listen [::]:80;
+    root /srv/www;
+    server_name _;
+
+    location /main {
+       root /srv/www;
+    }
+
+    location /main.cfg {
+       root /srv/www/conf;
+    }
+}
+
+sudo ln -s /etc/nginx/sites-available/my1.conf /etc/nginx/sites-enabled/ (активируем файл путём создания ссылки на него в директории sites-enabled)
+
+sudo vim /etc/nginx/nginx.conf
+(раскоментируем строку)
+...
+http {
+    ...
+    server_names_hash_bucket_size 64;
+    ...
+}
+...
+
+sudo systemctl restart nginx (перезапускаем, по запросу скачиаем файл).
